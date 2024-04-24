@@ -1,5 +1,6 @@
 # task3
-
+note:- it does not open in normal browser.The browser should disable its securities due to cross orgin issue.
+we should ues the commend called "chrome.exe --user-data-dir="C://chrome-dev-disabled-security" --disable-web-security --disable-site-isolation-trials"
 # Position Search and Filter
 
 This project helps users find specific positions. You can type in keywords to search for positions or choose from suggested options. The results will be shown as cards.
