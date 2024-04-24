@@ -1,0 +1,58 @@
+- name: vamshi
+  email: john@example.com
+  position: PhD
+  photo: 'pass.jpg'
+
+- name: virat kholi
+  email: jane@example.com
+  position: MS
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvvLX6CYTt-QhLYpZ6Mwj1oDI7DE7v4ZzXjQ&s'
+
+- name: dinesh kumar
+  email: alice@example.com
+  position: UG
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhfP4DWV8z02a8pVRjPQ_Zuvr7GJ9GKX0ujg&s'
+- name: maxwell
+  email: john@example.com
+  position: MSC
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKTm6OmKlYNG-_3dmDaXhF4NOxinKXha3Gxw&s'
+
+- name: duplessis
+  email: jane@example.com
+  position: MS
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg_TklroULjGlT9G15Zt9aicYseqMwCh8P0A&s'
+
+- name: rajat patidar
+  email: alice@example.com
+  position: UG
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnBpKV2Yegwnu3qV5I-ZD0IHYEqQdIIMk0CQ&s'
+  
+- name: lomror
+  email: john@example.com
+  position: PhD
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjUlz1U0tD1XCrGV3h1cajmk1lhVFru9Qabg&s'
+
+- name: prabudessi
+  email: jane@example.com
+  position: MS
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCHokWJKNXSA96zfhlakxdN18R92_4-l3ZAw&s'
+
+- name: dadvid willy
+  email: alice@example.com
+  position: MA
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4O2jD8vsR6FV32m_XZTdiBvGpfJR2Obg6jg&s'
+- name: rana
+  email: john@example.com
+  position: PhD
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9OcGsjnGMhaoHToYs8_gP9LAvRQMpgAA7EQ&s'
+
+- name: Steve Smith
+  email: jane@example.com
+  position: MBA
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpCBXhOIXrf9QMtxdJlIV6fjPCeeH8FbDdMQ&s'
+
+- name: gill
+  email: alice@example.com
+  position: MBA
+  photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTCbGCUNjyq16Mk7VmLMGip6t574z642ROHg&s'
+  

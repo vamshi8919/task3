@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search and Filter</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+  <style>
+    /* Custom styles for the search bar */
+    .search-container {
+      margin-top: 20px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-input {
+      width: 60%; /* Adjust the width as needed */
+      padding: 10px 15px;
+      border: 2px solid black;
+      border-radius: 30px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: #333;
+    }
+
+    .search-btn {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Your existing styles */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    #selected-positions {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    #selected-positions .selected-position {
+      border: 2px solid black;
+      padding: 0.5em 1.1em;
+      border-radius: 1.5em;
+      background-color: white;
+      color: black;
+      cursor: pointer;
+    }
+
+    #selected-positions .selected-position::after {
+      content: '\00D7';
+      margin-left: 5px;
+    }
+
+    #suggestion-box {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    #suggestion-box span {
+      border: 2px solid black;
+      padding: 0.2em 0.8em;
+      border-radius: 1.5em;
+      background-color: rgb(221, 210, 210);
+      color: black;
+      cursor: pointer;
+    }
+
+    .position {
+      display: inline-block;
+      margin-right: 10px;
+      cursor: pointer;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .position:first-child {
+      border-radius: 5px 0 0 5px;
+    }
+
+    .position.selected {
+      color: blue;
+    }
+
+    .position.selected::after {
+      content: '\00D7';
+      margin-left: 5px;
+    }
+
+    .card {
+      border: 1px solid white;
+      padding: 10px;
+      margin: 10px;
+      width: calc(25% - 20px); /* Four cards in a row for laptops */
+      display: inline-flex; /* Use flexbox */
+      flex-direction: column; /* Align items vertically */
+      align-items: center; /* Center items horizontally */
+      box-sizing: border-box;
+    }
+
+    .card img {
+      width: 100%; /* Make the image fit the width of the card */
+      height: auto;  /* Let the height adjust based on aspect ratio */
+      object-fit: cover;
+      margin-bottom: 15px; 
+      transition: all 1s;
+    }
+
+    .card img:hover {
+      transform: scale(1.025);
+    }
+
+    #cards {
+      margin-top: 20px; /* Add space between suggestion box and cards */
+    }
+
+    .card h3,
+    .card p {
+      /* Reduce padding and/or margin */
+      padding: 2px 5px;  /* Adjust values for desired spacing */
+      margin: 0;  /* Remove any default margin */
+    }
+
+    .btn-outline-secondary {
+      padding: 0.2em 0.2em;
+      margin-left: 0.2em;
+      color: black;
+      background-color: rgb(230, 223, 223);
+    }
+
+    p { 
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1200px) {
+      .card {
+          width: calc(33.33% - 20px); /* Three cards in a row for medium-sized devices */
+      }
+    }
+
+    @media (max-width: 992px) {
+      .card {
+          width: calc(50% - 20px); /* Two cards in a row for tablets */
+      }
+    }
+
+    @media (max-width: 576px) {
+      .card {
+          width: calc(100% - 20px); /* Single card in a row for small-sized devices */
+      }
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=600'); 
+      background-size: cover; 
+      background-position: center; 
+      background-repeat: no-repeat; 
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="search-container">
+        <input type="text" id="search" class="search-input" placeholder="Search positions ...">
+        <button class="search-btn" type="button" id="search-btn">
+          <img src="https://img.icons8.com/ios/50/000000/search--v1.png" alt="Search Icon" class="search-icon"> <!-- Load image from the internet -->
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="selected-positions"></div>
+
+  <div id="suggestion-box">
+    <span class="position PhD" data-position="PhD">PhD</span>
+    <span class="position PG" data-position="PG">PG</span>
+    <span class="position UG" data-position="UG">UG</span>
+    <span class="position Student" data-position="Student">Student</span>
+  </div>
+
+  <div class="card-container" id="cards"></div>
+</div>
+
+<!-- Bootstrap JS and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  const selectedPositions = [];
+  const searchInput = document.getElementById('search');
+  const searchBtn = document.getElementById('search-btn');
+  const suggestionBox = document.getElementById('suggestion-box');
+  const selectedPositionsContainer = document.getElementById('selected-positions');
+  const cardsContainer = document.getElementById('cards');
+
+  // Define the URL of the YAML file served by the live server
+  fetch('main.yaml')
+    .then(response => response.text())
+    .then(yamlString => {
+      console.log(yamlString)
+      // Parse YAML string into JavaScript object
+      const yamlObject = jsyaml.load(yamlString);
+      console.log(yamlObject)
+
+// Process YAML object
+      const positionsData = yamlObject;
+
+      // Function to create and display all cards on page load
+      function displayAllCards() {
+        cardsContainer.innerHTML = ''; // Clear existing cards (if any)
+        if (positionsData) {
+          positionsData.forEach(data => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.innerHTML = `
+                <img src="${data.photo}" alt="Photo" class>
+                <p>${data.name},</p>
+                <p>${data.position}</p>`;
+            cardsContainer.appendChild(card);
+          });
+        }
+      }
+
+      // Function to toggle selected positions and update UI/filtering
+      function toggleSelectedPosition(position) {
+        const selectedIndex = selectedPositions.indexOf(position);
+        if (selectedIndex !== -1) {
+          // Position is already selected, remove it
+          selectedPositions.splice(selectedIndex, 1);
+        } else {
+          // Position is not selected, add it
+          selectedPositions.push(position);
+        }
+        updateSelectedPositionsUI(); // Update UI to reflect selection changes
+        filterCardsBySelection(); // Call function to update cards based on selection changes
+        updateSuggestionBox(); // Update suggestion box based on selection changes
+      }
+
+      // Function to update selected positions UI based on selectedPositions array
+      function updateSelectedPositionsUI() {
+        selectedPositionsContainer.innerHTML = ''; // Clear existing selected positions
+        selectedPositions.forEach(position => {
+          const selectedPositionElement = document.createElement('div');
+          selectedPositionElement.classList.add('selected-position');
+          selectedPositionElement.textContent = position;
+          selectedPositionElement.addEventListener('click', () => toggleSelectedPosition(position));
+          selectedPositionsContainer.appendChild(selectedPositionElement);
+        });
+      }
+
+      // Function to update suggestion box based on selectedPositions array
+      function updateSuggestionBox() {
+        suggestionBox.innerHTML = ''; // Clear existing suggestion box options
+        if (positionsData) {
+          const availablePositions = positionsData.filter(data => !selectedPositions.includes(data.position));
+          const uniquePositions = {}; // Object to store unique positions
+          availablePositions.forEach(data => {
+            uniquePositions[data.position] = true; // Mark position as seen
+          });
+          // Iterate over unique positions and append them to the suggestion box
+          Object.keys(uniquePositions).forEach(position => {
+            const suggestionElement = document.createElement('span');
+            suggestionElement.classList.add('position');
+            suggestionElement.textContent = position;
+            suggestionElement.addEventListener('click', () => toggleSelectedPosition(position));
+            suggestionBox.appendChild(suggestionElement);
+          });
+        }
+      }
+
+      // Function to filter cards based on search bar keywords
+      function filterCardsBySearch() {
+        const searchTerm = searchInput.value.toLowerCase();
+        cardsContainer.innerHTML = ''; // Clear existing cards
+        if (positionsData) {
+          positionsData.forEach(data => {
+            let shouldBeDisplayed = true;
+            if (searchTerm && !data.position.toLowerCase().includes(searchTerm)) {
+              shouldBeDisplayed = false;
+            }
+            if (shouldBeDisplayed) {
+              const card = document.createElement('div');
+              card.classList.add('card');
+              card.innerHTML = `
+                  <img src="${data.photo}" alt="Photo">
+                  <p> ${data.name},</p>
+                  
+                  <p> ${data.position}</p>`;
+              cardsContainer.appendChild(card);
+            }
+          });
+        }
+      }
+
+      // Function to filter cards based on selected positions
+      function filterCardsBySelection() {
+        cardsContainer.innerHTML = ''; // Clear existing cards
+        if (positionsData) {
+          positionsData.forEach(data => {
+            let shouldBeDisplayed = true; // Assume card should be displayed initially
+
+            // Check if any selected positions exist
+            if (selectedPositions.length > 0) {
+              // Check if card's position is included in selectedPositions
+              shouldBeDisplayed = selectedPositions.includes(data.position);
+            }
+
+            if (shouldBeDisplayed) {
+              const card = document.createElement('div');
+              card.classList.add('card');
+              card.innerHTML = `
+                  <img src="${data.photo}" alt="Photo">
+                  <p> ${data.name}</p>
+                 
+                  <p> ${data.position}</p>`;
+              cardsContainer.appendChild(card);
+            }
+          });
+        }
+      }
+
+      // Event listeners for search and position selection
+      searchBtn.addEventListener('click', filterCardsBySearch);
+      searchInput.addEventListener('keyup', filterCardsBySearch);
+
+      // Call displayAllCards function on page load to display initial cards
+      displayAllCards();
+
+      // Initial update of suggestion box
+      updateSuggestionBox();
+    })
+    .catch(error => console.error('Error fetching YAML file:', error));
+</script>
+
+</body>
+</html>
